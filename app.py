@@ -35,6 +35,7 @@ def main():
     - **Code Editor**: An interactive editor with syntax highlighting for writing Python code.
     - **Execute Code**: Run Python code directly within the app and see the output immediately.
     - **Output Display**: View the results or errors of your executed code in a clean format.
+    - **AI- Assistant**: Erros can be rectfied or explanations can be asked.
 
     Use the navigation on the left to explore these features.
     
