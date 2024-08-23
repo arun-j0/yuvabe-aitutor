@@ -12,10 +12,11 @@ logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s 
 logger = logging.getLogger(__name__)
 
 # Set page configuration
-st.set_page_config(page_title="Python Tutor App", layout="wide")
 
 # Initialize session state variables
 def initialize_session_state():
+    if "bot_response" not in st.session_state:
+        st.session_state["bot_response"] = ""
     if 'modules' not in st.session_state:
         st.session_state.modules = {}
     if 'ai_content' not in st.session_state:
@@ -25,7 +26,8 @@ def initialize_session_state():
     if 'clicked_text' not in st.session_state:
         st.session_state.clicked_text = ""
 
-initialize_session_state()
+# Ensure initialization happens before any access to session_state
+
 
 def get_modules_and_sub_modules(course):
     if course not in st.session_state.modules:
@@ -56,27 +58,23 @@ def extract_keywords(content):
     pattern = r'\*\*(.*?)\*\*'
     all_keywords = re.findall(pattern, content)
 
-    # List of irrelevant words
-    irrelevant_words = {"introduction", "conclusion", "explanation", "like", "kind", "words", "and", "the", "is", "a", "an", "of", "to", "in", "for", "on", "with", "by", "or", "as", "at", "that", "this", "are", "was", "were", "be", "has", "have", "had", "do", "does", "did", "will", "shall", "may", "might", "could", "should", "must", "would", "about", "below", "above", "before", "after", "during", "between", "among", "where", "when", "who", "whom", "whose", "which", "what", "how", "why", "then", "now", "there", "here", "such", "these", "those", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten","books","online coursers","courses","course","tutorial","tutorials","tutor","tutors","tips and tricks","tips","tricks","trick","tip","guide","guides","guidance","guidances","manual","manuals","conclusion"}
+    irrelevant_words = {"introduction", "conclusion", "explanation", "like", "kind", "words", "and", "the", "is", "a", "an", "of", "to", "in", "for", "on", "with", "by", "or", "as", "at", "that", "this", "are", "was", "were", "be", "has", "have", "had", "do", "does", "did", "will", "shall", "may", "might", "could", "should", "must", "would", "about", "below", "above", "before", "after", "during", "between", "among", "where", "when", "who", "whom", "whose", "which", "what", "how", "why", "then", "now", "there", "here", "such", "these", "those", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "books", "online coursers", "courses", "course", "tutorial", "tutorials", "tutor", "tutors", "tips and tricks", "tips", "tricks", "trick", "tip", "guide", "guides", "guidance", "guidances", "manual", "manuals", "conclusion"}
 
-    # List of specific date and time terms to exclude
     specific_date_terms = {"today", "yesterday", "tomorrow", "this week", "last week", "next week", "this month", "last month", "next month", "this year", "last year", "next year"}
 
     def is_date_or_time(value):
-        # Regular expressions for common date and time formats
         date_patterns = [
-            r'\b\d{4}-\d{2}-\d{2}\b',     # YYYY-MM-DD
-            r'\b\d{2}/\d{2}/\d{4}\b',     # MM/DD/YYYY
-            r'\b\d{2}-\d{2}-\d{2}\b',     # DD-MM-YY
-            r'\b\d{2} \w{3} \d{4}\b',     # DD MMM YYYY
-            r'\b\d{4}\b',                 # YYYY
+            r'\b\d{4}-\d{2}-\d{2}\b',
+            r'\b\d{2}/\d{2}/\d{4}\b',
+            r'\b\d{2}-\d{2}-\d{2}\b',
+            r'\b\d{2} \w{3} \d{4}\b',
+            r'\b\d{4}\b',
         ]
         time_patterns = [
-            r'\b\d{2}:\d{2}\b',           # HH:MM
-            r'\b\d{2}:\d{2}:\d{2}\b',     # HH:MM:SS
+            r'\b\d{2}:\d{2}\b',
+            r'\b\d{2}:\d{2}:\d{2}\b',
         ]
         
-        # Combine all patterns
         all_patterns = date_patterns + time_patterns
 
         for pattern in all_patterns:
@@ -85,10 +83,8 @@ def extract_keywords(content):
         return False
 
     def is_number(value):
-        # Exclude all standalone numbers
         return re.fullmatch(r'\d+', value) is not None
 
-    # Filter out irrelevant words, standalone numbers, and date/time representations
     relevant_keywords = [
         kw for kw in all_keywords
         if kw.lower() not in irrelevant_words
@@ -100,6 +96,9 @@ def extract_keywords(content):
     return relevant_keywords
 
 def main():
+    initialize_session_state()
+    st.set_page_config(page_title="Python Tutor App", layout="wide")
+
     col1, col2 = st.columns([3, 2])
 
     with st.sidebar:
@@ -130,7 +129,6 @@ def main():
 
     with col2:
         with st.expander("Chat Bot", expanded=True):
-            # Handle keyword and chat functionality inside the expander
             if selected_sub_module:
                 keywords = extract_keywords(generate_ai_content(selected_course, selected_sub_module))
                 chatbot(selected_course, selected_module, selected_sub_module, keywords)

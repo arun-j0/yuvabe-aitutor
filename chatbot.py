@@ -6,7 +6,7 @@ from config import youtube_api_key
 
 # Ensure the session state is initialized
 if 'bot_response' not in st.session_state:
-    st.session_state.bot_response = ""
+    st.session_state.bot_response = " "
 
 def chatbot(selected_course, selected_module, selected_sub_module,keywords):
     index = selected_sub_module.find(":")

@@ -52,7 +52,7 @@ def generate_quiz(content):
         return []
 
 # Main app function
-def app():
+def main():
     # Initialize session state variables if they don't exist
     if 'questions' not in st.session_state:
         st.session_state.questions = []
@@ -115,4 +115,4 @@ def app():
         st.write(f"Quiz completed! You got {st.session_state.correct_answers} out of {len(st.session_state.questions)} correct.")
 
 if __name__ == "_main_":
-    app()
+    main()
