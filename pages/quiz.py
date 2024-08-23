@@ -114,5 +114,5 @@ def app():
     if st.session_state.quiz_completed:
         st.write(f"Quiz completed! You got {st.session_state.correct_answers} out of {len(st.session_state.questions)} correct.")
 
-if _name_ == "_main_":
+if __name__ == "_main_":
     app()

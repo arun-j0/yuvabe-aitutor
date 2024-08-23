@@ -1,9 +1,8 @@
-#app.py
 import streamlit as st
 from dotenv import load_dotenv
 import logging
-from chatbot import chatbot
-from api_service import get_course_syllabus_beginner, get_chat_completion
+from chatbot import chatbot  # Ensure chatbot is properly defined in chatbot.py
+from api_service import get_course_syllabus_beginner, get_chat_completion  # Ensure these functions are defined in api_service.py
 
 # Load environment variables
 load_dotenv()
@@ -130,10 +129,13 @@ def main():
             st.write("Please select a sub-module.")
 
     with col2:
-        with st.expander("Chat Bot",expanded=True):
+        with st.expander("Chat Bot", expanded=True):
             # Handle keyword and chat functionality inside the expander
-            keywords=extract_keywords(generate_ai_content(selected_course, selected_sub_module))
-            chatbot(selected_course, selected_module, selected_sub_module, keywords)
+            if selected_sub_module:
+                keywords = extract_keywords(generate_ai_content(selected_course, selected_sub_module))
+                chatbot(selected_course, selected_module, selected_sub_module, keywords)
+            else:
+                st.write("Please select a sub-module.")
 
 if __name__ == "__main__":
     main()

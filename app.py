@@ -4,13 +4,23 @@ import streamlit as st
 from pages.course import main as COURSES_WITH_AI_ASSISTANCE
 from pages.Interpreter import main as PYTHON_CODE_INTERPRETER
 from pages.notes import main as NOTES_MANAGEMENT
+from pages.home import main as HOME_PAGE
+from pages.quiz import app as QUIZ_PAGE
 
 def main():
-    pages = {
-        "Home": st.Page(COURSES_WITH_AI_ASSISTANCE, title="Course Management & AI Assistance"),
-        "PyCode": st.Page(PYTHON_CODE_INTERPRETER, title="Python Code Interpreter"),
-        "Note": st.Page(NOTES_MANAGEMENT, title="Notes Management System"),
-    }
+    pages = [
+        st.Page(HOME_PAGE, title="HOME"), 
+        st.Page(COURSES_WITH_AI_ASSISTANCE, url_path="/courses",title="COURSES"),
+        st.Page(NOTES_MANAGEMENT,url_path="/notes",title="NOTES"),
+        st.Page(PYTHON_CODE_INTERPRETER,url_path="/interpretr",title="PYTHON INTERPRETER"),
+        st.Page(QUIZ_PAGE,url_path="/quiz",title="QUIZ")
+    ]
+    
+    pg = st.navigation(pages)
+    pg.run()
+    
+   
+    
     st.header("APPLICATION OVERVIEW")
     st.markdown("""
     Welcome to our comprehensive application designed to enhance your productivity and learning experience. 
@@ -38,19 +48,7 @@ def main():
     - **AI- Assistant**: Erros can be rectfied or explanations can be asked.
 
     Use the navigation on the left to explore these features.
-    
-    
-    ### WORKS YET TO BE DONE
-    -Auto response for a keyword when cliked\n
-    -Keywords retrival method need to be changed\n
-    -Need to work on Naviagtion Menu
-    
     """)
-
-    # Access pages using keys
-    for page_name in pages:  # Iterate over page names (keys)
-        current_page = pages[page_name]  # Get the corresponding StreamlitPage
-        # (Optional) Perform actions with current_page if needed
-
+    
 if __name__ == "__main__":
     main()
